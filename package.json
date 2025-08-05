@@ -1,17 +1,15 @@
 {
   "name": "discord-selfbot",
   "version": "1.0.0",
-  "description": "Selfbot pentru Discord",
+  "description": "Selfbot Discord cu spam si DM auto-reply",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "dependencies": {
-    "discord.js-selfbot-v13": "2.14.11",
-    "express": "^4.18.2"
+    "discord.js-selfbot-v13": "github:NomadMcself/discord.js-selfbot-v13"
   }
 }
-
