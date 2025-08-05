@@ -1,30 +1,27 @@
-// Patch pentru eroarea friend_source_flags
-const ClientUserSettingManager = require("discord.js-selfbot-v13/src/managers/ClientUserSettingManager");
-const oldPatch = ClientUserSettingManager.prototype._patch;
-ClientUserSettingManager.prototype._patch = function (data) {
-  if (data && !data.friend_source_flags) {
-    data.friend_source_flags = { all: false };
-  }
-  return oldPatch.call(this, data);
-};
-
-// Restul codului tău
 const { Client } = require("discord.js-selfbot-v13");
 const client = new Client();
 
-const token = process.env.TOKEN; // Folosim environment variable
-const spamChannelId = "1086694868132311152";
-const logChannelId = "1393724819216007310";
+// 🔹 Folosește Environment Variables pentru siguranță
+const token = process.env.TOKEN;
 
+// 🔹 ID-uri canale
+const spamChannelId = "1086694868132311152"; // schimbă cu canalul de spam
+const logChannelId = "1393724819216007310";  // schimbă cu canalul de log DM
+
+// 🔹 Stocăm userii la care am răspuns deja
 const respondedUsers = new Set();
 
 client.on("ready", () => {
   console.log(`✅ Sunt logat ca ${client.user.tag}`);
+
+  // Trimite mesaj la interval fix
   setInterval(() => {
     const spamChannel = client.channels.cache.get(spamChannelId);
-    if (spamChannel)
+    if (spamChannel) {
       spamChannel.send("# dm me for 50 skelys").catch(console.error);
-    else console.log("❌ Canalul de spam nu a fost găsit!");
+    } else {
+      console.log("❌ Canalul de spam nu a fost găsit!");
+    }
   }, 126000);
 });
 
@@ -33,27 +30,24 @@ client.on("messageCreate", (message) => {
     if (!respondedUsers.has(message.author.id)) {
       respondedUsers.add(message.author.id);
 
+      // Log DM pe canal
       const logChannel = client.channels.cache.get(logChannelId);
-      if (logChannel)
-        logChannel
-          .send(`📨 ${message.author.tag} ți-a dat DM!`)
-          .catch(console.error);
+      if (logChannel) {
+        logChannel.send(`📨 ${message.author.tag} ți-a dat DM!`).catch(console.error);
+      }
 
+      // Răspunde la DM
       setTimeout(() => {
         message.channel.send(
-          "hi u was first create a ticket to claim : https://discord.gg/aGfP2gXm",
-        );
+          "hi u was first create a ticket to claim : https://discord.gg/aGfP2gXm"
+        ).catch(console.error);
       }, 9000);
     }
   }
 });
 
-client.login(token);
+client.login(token).catch(err => {
+  console.error("❌ Eroare la login:", err);
+});
 
-// Express server pentru uptime
-const express = require("express");
-const app = express();
-app.get("/", (req, res) => res.send("✅ Botul este online!"));
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🌐 Serverul rulează pe portul ${PORT}`));
 
