@@ -1,13 +1,13 @@
 {
-  "name": "discord-selfbot",
+  "name": "discord-selfbot-eris",
   "version": "1.0.0",
-  "description": "Discord selfbot cu functii automate",
+  "description": "Selfbot cu Eris pentru mesaje automate",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js-selfbot-v13": "^2.9.13"
+    "eris": "^0.17.2"
   },
   "engines": {
     "node": "18.x"
