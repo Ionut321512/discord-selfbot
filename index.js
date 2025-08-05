@@ -1,49 +1,40 @@
-const Eris = require("eris");
+const { Client } = require("discord.js-selfbot-v13");
+const client = new Client();
 
-const token = process.env.BOT_TOKEN; // Tokenul vine din Environment Variables
-const spamChannelId = "ID_CANAL_SPAM";
-const logChannelId = "ID_CANAL_LOG";
+const token = process.env.BOT_TOKEN; // tokenul vine din Environment Variables pe Render
+const spamChannelId = "1086694868132311152";
+const logChannelId = "1393724819216007310";
 
 const respondedUsers = new Set();
 
-const bot = new Eris(token, {
-    autoreconnect: true
+client.on("ready", () => {
+  console.log(`✅ Sunt logat ca ${client.user.tag}`);
+  setInterval(() => {
+    const spamChannel = client.channels.cache.get(spamChannelId);
+    if (spamChannel)
+      spamChannel.send("# dm me for 50 skelys").catch(console.error);
+    else console.log("❌ Canalul de spam nu a fost găsit!");
+  }, 126000);
 });
 
-bot.on("ready", () => {
-    console.log(`✅ Logat ca ${bot.user.username}#${bot.user.discriminator}`);
+client.on("messageCreate", (message) => {
+  if (message.channel.type === "DM" && message.author.id !== client.user.id) {
+    if (!respondedUsers.has(message.author.id)) {
+      respondedUsers.add(message.author.id);
 
-    setInterval(() => {
-        const spamChannel = bot.getChannel(spamChannelId);
-        if (spamChannel) {
-            spamChannel.createMessage("# dm me for 50 skelys")
-                .catch(console.error);
-        } else {
-            console.log("❌ Canalul de spam nu a fost găsit!");
-        }
-    }, 126000); // 126 secunde
-});
+      const logChannel = client.channels.cache.get(logChannelId);
+      if (logChannel)
+        logChannel
+          .send(`📨 ${message.author.tag} ți-a dat DM!`)
+          .catch(console.error);
 
-bot.on("messageCreate", async (message) => {
-    if (message.channel.type === 1 && message.author.id !== bot.user.id) {
-        // DM = type 1 în Eris
-        if (!respondedUsers.has(message.author.id)) {
-            respondedUsers.add(message.author.id);
-
-            const logChannel = bot.getChannel(logChannelId);
-            if (logChannel) {
-                logChannel.createMessage(`📨 ${message.author.username}#${message.author.discriminator} ți-a dat DM!`)
-                    .catch(console.error);
-            }
-
-            setTimeout(() => {
-                message.channel.createMessage(
-                    "hi u was first create a ticket to claim : https://discord.gg/aGfP2gXm"
-                ).catch(console.error);
-            }, 9000);
-        }
+      setTimeout(() => {
+        message.channel.send(
+          "hi u was first create a ticket to claim : https://discord.gg/aGfP2gXm"
+        );
+      }, 9000);
     }
+  }
 });
 
-bot.connect();
-
+client.login(token);
