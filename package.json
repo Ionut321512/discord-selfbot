@@ -1,13 +1,13 @@
 {
   "name": "discord-selfbot",
   "version": "1.0.0",
+  "description": "Discord selfbot cu spam pe canal si auto-reply la DM",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "discord.js-selfbot-v13": "^2.14.9",
-    "express": "^4.18.2"
+    "discord.js-selfbot-v13": "^2.14.6"
   },
   "engines": {
     "node": "20.x"
